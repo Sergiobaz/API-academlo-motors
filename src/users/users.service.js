@@ -1,6 +1,16 @@
 import User from "./users.model.js";
 
 export class UserService {
+
+   async findOneByEmail(email) {
+    return await User.findOne({
+      where: {
+        status: "available",
+        email: email,
+      },
+    });
+  }
+
   async findOne(id) {
     return await User.findOne({
       where: {

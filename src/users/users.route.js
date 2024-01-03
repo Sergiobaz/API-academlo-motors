@@ -1,13 +1,18 @@
 import express from "express"
-import { findAllUsers, findOneUser, createUser, updateUser, deleteUser } from "./users.controller.js"
+import { findAllUsers, findOneUser, createUser, updateUser, deleteUser,login } from "./users.controller.js"
+import { protect } from "./users.middleware.js"
 
 
 
 export const router = express.Router()
 
+router.post("/login", login)
+
 router.route("/")
-.get(findAllUsers)
+.get(protect ,findAllUsers)
 .post(createUser)
+
+router.use(protect)
 
 router.route("/:id")
 .get(findOneUser)

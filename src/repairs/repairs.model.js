@@ -15,6 +15,14 @@ const Repair = sequelize.define('repairs', {
         defaultValue: "name"
         
     },
+    motorsNumber: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    description: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
     status: {
         type: DataTypes.ENUM("pending","completed","cancelled"),
         defaultValue: 'pending',
