@@ -38,16 +38,12 @@ export const findAllUsers = catchAsync(async (req, res) => {
 });
 
 export const createUser = catchAsync(async (req, res) => {
-  console.log(req.body);
-  const { hasError, errorMessages, userData } = validateCreateUser(req.body);
-  console.log(userData);
-  if (hasError) {
-    return res.status(422).json({
-      status: "error",
-      message: errorMessages,
-    });
-  }
-  const user = await userService.create(userData);
+  //console.log(req.body);
+  //const { hasError, errorMessages, userData } = validateCreateUser(req.body);
+  //console.log(userData);
+  const { name, email, password } = req.body
+  
+  const user = await userService.create({ name, email, password });
   const token = await generateJWT(user.id);
   return res.status(201).json({
     token,

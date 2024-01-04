@@ -8,11 +8,10 @@ const userSchema = z.object({
 })
 
 export function validateCreateUser(data) {
+
     const result = userSchema.safeParse(data)
-    
+   
     const { hasError, errorMessages, data: userData} = extractValidationData(result)
-    
-    
 
     return {
         hasError,

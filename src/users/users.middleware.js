@@ -22,7 +22,7 @@ export const protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  const decoded = await promisify(jwt.verify)(token, envs.SECRET_JWD_SEED);
+  const decoded = await promisify(jwt.verify)(token, envs.SECRET_JWT_SEED);
 
   const user = await userService.findOne(decoded.id);
 
