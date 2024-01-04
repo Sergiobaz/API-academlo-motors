@@ -31,14 +31,14 @@ export const login = catchAsync(async (req, res, next) => {
   });
 });
 
-export const findAllUsers = catchAsync(async (req, res) => {
+export const findAllUsers = catchAsync(async (req, res, next) => {
   const users = await userService.findAll();
   return res.status(200).json(users);
 });
 
-export const createUser = catchAsync(async (req, res) => {
-  const { name, email, password } = req.body;
-  const user = await userService.create({ name, email, password });
+export const createUser = catchAsync(async (req, res, next) => {
+  const { name, email, password, role } = req.body;
+  const user = await userService.create({ name, email, password, role });
   const token = await generateJWT(user.id);
   return res.status(201).json({
     token,
@@ -49,7 +49,7 @@ export const createUser = catchAsync(async (req, res) => {
   });
 });
 
-export const findOneUser = catchAsync(async (req, res) => {
+export const findOneUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const user = await userService.findOne(id);
   if (!user) {
@@ -61,28 +61,15 @@ export const findOneUser = catchAsync(async (req, res) => {
   return res.status(200).json(user);
 });
 
-export const updateUser = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const user = await userService.findOne(id);
-  if (!user) {
-    return res.status(404).json({
-      status: "error",
-      message: "user not found",
-    });
-  }
-  const userUpdated = await userService.update(user, req.body);
+export const updateUser = catchAsync(async (req, res, next) => {
+  const { name, email } = req.body;
+  const { user } = req;
+  const userUpdated = await userService.update(user, { name, email });
   return res.status(200).json(userUpdated);
 });
 
-export const deleteUser = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const user = await userService.findOne(id);
-  if (!user) {
-    return res.status(404).json({
-      status: "error",
-      message: "user not found",
-    });
-  }
+export const deleteUser = catchAsync(async (req, res, next) => {
+  const { user } = req;
   await userService.delete(user);
   return res.status(204).json(null);
 });

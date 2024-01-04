@@ -1,6 +1,6 @@
 import express from "express"
 import { findAllUsers, findOneUser, createUser, updateUser, deleteUser,login } from "./users.controller.js"
-import { protect } from "./users.middleware.js"
+import { protect, protectAccountOwner, validExistUser } from "./users.middleware.js"
 
 
 
@@ -16,6 +16,6 @@ router.use(protect)
 
 router.route("/:id")
 .get(findOneUser)
-.patch(updateUser)
-.delete(deleteUser)
+.patch(validExistUser,protectAccountOwner,updateUser)
+.delete(validExistUser,protectAccountOwner,deleteUser)
 

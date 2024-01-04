@@ -5,7 +5,7 @@ import { UserService } from "../users/users.service.js";
 import { catchAsync } from "../common/errors/catchAsync.js";
 import { AppError } from "../common/errors/appError.js";
 
-const userService = new UserService()
+const userService = new UserService();
 
 export const protect = catchAsync(async (req, res, next) => {
   let token;
@@ -36,21 +36,32 @@ export const protect = catchAsync(async (req, res, next) => {
 });
 
 export const restrictTo = (...roles) => {
-    return (req, res, next) => {
-        if (!roles.includes(req.sessionUser.role)) {
-            return next(
-                new AppError("you do not have permission to perform this action!", 403)
-            )
-        }
-        next()
+  return (req, res, next) => {
+    if (!roles.includes(req.sessionUser.role)) {
+      return next(
+        new AppError("you do not have permission to perform this action!", 403)
+      );
     }
-}
+    next();
+  };
+};
 
 export const protectAccountOwner = catchAsync(async (req, res, next) => {
-    const { user, sessionUser } = req
+  const { user, sessionUser } = req;
 
-    if (user.id !== sessionUser.id) {
-        return next (new AppError("You do not own this account.", 401))
-    }
-    next()
-})
+  if (user.id !== sessionUser.id) {
+    return next(new AppError("You do not own this account.", 401));
+  }
+  next();
+});
+
+export const validExistUser = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  
+  const user = await userService.findOne(id);
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+  req.user = user;
+  next();
+});
